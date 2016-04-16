@@ -1,2 +1,3 @@
-# ld35
-Ludum Dare #35 - Theme: Shapeshift
+ld35
+===========
+[Play on kayzgames.github.io](http://kayzgames.github.io/ld35)

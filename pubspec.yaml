@@ -1,0 +1,15 @@
+name: ld35
+description: A ld35 game
+dependencies:
+  browser: any
+  dartemis: any
+  dartemis_transformer: any
+  gamedev_helpers:
+#    git: https://github.com/denniskaselow/gamedev_helpers
+    path: ../gamedev_helpers
+  dart_to_js_script_rewriter: any
+transformers:
+- dart_to_js_script_rewriter
+- dartemis_transformer:
+    additionalLibraries:
+    - gamedev_helpers/gamedev_helpers.dart
