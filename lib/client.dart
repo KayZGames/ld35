@@ -4,6 +4,8 @@ import 'dart:html' hide Player, Timeline;
 export 'dart:html' hide Player, Timeline;
 import 'package:ld35/shared.dart';
 import 'package:gamedev_helpers/gamedev_helpers.dart';
+import 'dart:web_gl';
+import 'dart:typed_data';
 export 'package:gamedev_helpers/gamedev_helpers.dart';
 //part 'src/client/systems/name.dart';
 part 'src/client/systems/events.dart';
@@ -20,14 +22,17 @@ class Game extends GameBase {
       ..textBaseline = 'top'
       ..font = '16px Verdana';
   }
+
   void createEntities() {
-    // addEntity([Component1, Component2]);
+     addEntity([new Position(0.0, 0.0, 0.0), new Vertices.square()]);
   }
+
   Map<int, List<EntitySystem>> getSystems() {
     return {
       GameBase.rendering: [
         new WebGlCanvasCleaningSystem(ctx),
         new CanvasCleaningSystem(hudCanvas),
+        new Abc(ctx),
         new FpsRenderingSystem(hudCtx, fillStyle: 'white'),
       ],
       GameBase.physics: [
@@ -36,4 +41,3 @@ class Game extends GameBase {
     };
   }
 }
-
