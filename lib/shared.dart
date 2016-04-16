@@ -5,4 +5,5 @@ part 'src/shared/components.dart';
 //part 'src/shared/systems/name.dart';
 part 'src/shared/systems/logic.dart';
 
-const int verticeCount = 32;
+const int segmentCount = 32;
+

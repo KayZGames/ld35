@@ -11,7 +11,7 @@ class Abc extends WebGlRenderingSystem {
   int valuesPerItem = 3;
 
   Abc(RenderingContext gl) : super(gl, Aspect.getAspectForAllOf([Position, Vertices])) {
-    attribsutes = [new Attrib('aPos', 3)];
+    attribsutes = [new Attrib('aPos', valuesPerItem)];
   }
 
   @override
@@ -19,17 +19,16 @@ class Abc extends WebGlRenderingSystem {
     var p = pm[entity];
     var v = vm[entity];
 
-    var offset = index * valuesPerItem * v.vertices.length;
+    var offset = index * v.vertices.length;
     var indicesOffset = index * v.indices.length;
 
     for (int i = 0; i < v.indices.length; i++) {
-      indices[indicesOffset + i] = v.indices[i] + offset;
+      indices[indicesOffset + i] = v.indices[i];
     }
-    for (int i = 0; i < v.vertices.length; i++) {
-      var v3 = v.vertices[i];
-      items[offset + i * valuesPerItem] = v3.x * 0.5;
-      items[offset + i * valuesPerItem + 1] = v3.y * 0.5;
-      items[offset + i * valuesPerItem + 2] = v3.z * 0.5;
+    for (int i = 0; i < v.vertices.length; i += 3) {
+      items[offset + i] = v.vertices[i] * 0.5;
+      items[offset + i + 1] = v.vertices[i + 1] * 0.5;
+      items[offset + i + 2] = v.vertices[i + 2] * 0.5;
     }
   }
 
@@ -41,8 +40,8 @@ class Abc extends WebGlRenderingSystem {
 
   @override
   void updateLength(int length) {
-    items = new Float32List(length * (verticeCount + 1) * valuesPerItem);
-    indices = new Uint16List(length * verticeCount * 3);
+    items = new Float32List(length * (segmentCount + 1) * valuesPerItem);
+    indices = new Uint16List(length * segmentCount * valuesPerItem);
   }
 
   @override

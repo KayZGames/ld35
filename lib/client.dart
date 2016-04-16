@@ -21,6 +21,7 @@ class Game extends GameBase {
     hudCtx
       ..textBaseline = 'top'
       ..font = '16px Verdana';
+    Tween.combinedAttributesLimit = (segmentCount + 1) * 3;
   }
 
   void createEntities() {
@@ -30,6 +31,9 @@ class Game extends GameBase {
   Map<int, List<EntitySystem>> getSystems() {
     return {
       GameBase.rendering: [
+        new TweeningSystem(),
+        new InputHandlingSystem(hudCanvas),
+        new ShapeShiftingSystem(),
         new WebGlCanvasCleaningSystem(ctx),
         new CanvasCleaningSystem(hudCanvas),
         new Abc(ctx),
