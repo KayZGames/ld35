@@ -1,10 +1,12 @@
 part of shared;
 
 typedef Geometry ShapeGenerator();
+typedef double ShapeRadiusCalculator(double area);
 
 class GeometryGenerator {
 
   static List<ShapeGenerator> shapeGenerators = [createCircle, createSquare];
+  static List<ShapeRadiusCalculator> shapeRadiusCalculators = [getCircleRadius, getSquareRadius];
 
   static Geometry createCircle() {
     final verticesPerSegment = 3;
@@ -73,6 +75,10 @@ class GeometryGenerator {
     indices[segmentCount * 3 - 1] = 1;
     return new Geometry(vertices, indices);
   }
+
+  static double getCircleRadius(double area) => sqrt(area / PI);
+  static double getSquareRadius(double area) => sqrt(area) / 2;
+
 }
 
 class Geometry {

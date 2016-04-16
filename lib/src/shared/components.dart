@@ -5,6 +5,11 @@ class Position extends Component {
   Position(double x, double y, double z) : xyz = new Vector3(x, y, z);
 }
 
+class Size extends Component {
+  double radius, area;
+  Size(this.area, this.radius);
+}
+
 class Vertices extends Component implements Tweenable {
   static final int tweenVertices = 0;
 
