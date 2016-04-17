@@ -117,6 +117,7 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
   void render(int length) {
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewProjection'),
         false, vpmm.create3dViewProjectionMatrix().storage);
+    gl.uniform1f(gl.getUniformLocation(program, 'uTime'), time);
 
     bufferElements(attribsutes, items, indices);
     gl.drawElements(TRIANGLES, indices.length, UNSIGNED_SHORT, 0);

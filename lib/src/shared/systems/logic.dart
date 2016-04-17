@@ -54,7 +54,5 @@ class MovementSystem extends EntityProcessingSystem {
     var v = vm[entity];
 
     p.xyz += v.xyz * world.delta;
-
-    print(p.xyz);
   }
 }
