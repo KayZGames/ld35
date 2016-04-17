@@ -1,7 +1,7 @@
 library client;
 
-import 'dart:html' hide Player, Timeline;
-export 'dart:html' hide Player, Timeline;
+import 'dart:html';
+export 'dart:html';
 import 'package:ld35/shared.dart';
 import 'package:gamedev_helpers/gamedev_helpers.dart';
 import 'dart:web_gl';
@@ -30,7 +30,7 @@ class Game extends GameBase {
       new Position(0.0, 0.0, 0.0),
       new Velocity(0.0, 0.0, 100.0),
       new Vertices.circle(),
-      new Size(PI * 100 * 100, 100.0)
+      new Size(PI * 10 * 10, 10.0)
     ]);
     tm.register(player, playerTag);
 
