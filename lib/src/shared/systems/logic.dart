@@ -67,7 +67,7 @@ class PlayerAccelerationSystem extends EntityProcessingSystem {
     var p = pm[entity];
     var v = vm[entity];
 
-    v.xyz.z = min(500.0, 100.0 + p.xyz.z / 100.0);
+    v.xyz.z = min(5000.0, 100.0 + p.xyz.z / 100.0);
   }
 }
 

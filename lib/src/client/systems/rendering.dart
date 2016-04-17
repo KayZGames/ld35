@@ -160,6 +160,7 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
   void processEntity(int index, Entity entity) {
     var o = om[entity];
     var p = pm[entity];
+    var type = o.type;
 
     final itemCount = valuesPerItem * segmentsPerObstacle;
     var offset = index * itemCount;
@@ -168,10 +169,7 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
       final loopOffset = offset + i * valuesPerItem;
       final loopIndicesOffset = indicesOffset + i * 3;
 
-      final angle = -PI / 4 + 2 * PI * i / segmentsPerObstacle;
-      items[loopOffset] = p.xyz.x + cos(angle) * playerRadius * 1.1;
-      items[loopOffset + 1] = p.xyz.y + sin(angle) * playerRadius * 1.1;
-      items[loopOffset + 2] = p.xyz.z;
+      createShapeBorderVertex(i, loopOffset, p, type);
 
       createBorderVertex(loopOffset, p, i);
 
@@ -188,6 +186,42 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
         offset ~/ valuesPerItem;
     indices[indicesOffset + segmentsPerObstacle * 3 - 4] =
         offset ~/ valuesPerItem;
+  }
+
+  void createShapeBorderVertex(int segment, int loopOffset, Position p, int type) {
+    var x, y;
+    switch (type) {
+      case 0:
+        final angle = -PI / 4 + 2 * PI * segment / segmentsPerObstacle;
+        x = cos(angle);
+        y = sin(angle);
+        break;
+      case 1:
+        var i = segment ~/ (segmentsPerObstacle ~/ 4);
+        var j = segment % (segmentsPerObstacle ~/ 4);
+        switch (i) {
+          case 0:
+            x = 1.0;
+            y = -1.0 + 2 * (j / (segmentsPerObstacle ~/ 4));
+            break;
+          case 1:
+            x = 1.0 - 2 * (j / (segmentsPerObstacle ~/ 4));
+            y = 1.0;
+            break;
+          case 2:
+            x = -1.0;
+            y = 1.0 - 2 * (j / (segmentsPerObstacle ~/ 4));
+            break;
+          case 3:
+            x = -1.0 + 2 * (j / (segmentsPerObstacle ~/ 4));
+            y = -1.0;
+            break;
+        }
+        break;
+    }
+    items[loopOffset] = p.xyz.x + x * playerRadius * 1.1;
+    items[loopOffset + 1] = p.xyz.y + y * playerRadius * 1.1;
+    items[loopOffset + 2] = p.xyz.z;
   }
 
   void createBorderVertex(int loopOffset, Position p, int segment) {

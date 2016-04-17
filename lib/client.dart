@@ -28,7 +28,7 @@ class Game extends GameBase {
     var tm = world.getManager(TagManager) as TagManager;
     var player = addEntity([
       new Position(0.0, 0.0, 0.0),
-      new Velocity(0.0, 0.0, 100.0),
+      new Velocity(0.0, 0.0, 10.0),
       new Vertices.circle(),
       new Size(PI * playerRadius * playerRadius, playerRadius)
     ]);
@@ -41,9 +41,9 @@ class Game extends GameBase {
 
     for (int i = -2; i < 3; i++) {
       for (int j = -2; j < 3; j++) {
-        addEntity([
+        world.createAndAddEntity([
           new Position(i * playerRadius * 4, j * playerRadius * 4, 1000.0),
-          new Obstacle(0)
+          new Obstacle(random.nextInt(2))
         ]);
       }
     }

@@ -35,7 +35,7 @@ class ObstacleSpawner extends VoidEntitySystem {
         world.createAndAddEntity([
           new Position(i * playerRadius * 4, j * playerRadius * 4,
               lastObstacle * 1000.0),
-          new Obstacle(0)
+          new Obstacle(random.nextInt(2))
         ]);
       }
     }
