@@ -31,9 +31,9 @@ class PlayerRenderingSystem extends WebGlRenderingSystem {
       indices[indicesOffset + i] = v.indices[i];
     }
     for (int i = 0; i < v.vertices.length; i += 3) {
-      items[offset + i] = v.vertices[i] * s.radius;
-      items[offset + i + 1] = v.vertices[i + 1] * s.radius;
-      items[offset + i + 2] = v.vertices[i + 2] * s.radius;
+      items[offset + i] = v.vertices[i] * s.radius  + p.xyz.x;
+      items[offset + i + 1] = v.vertices[i + 1] * s.radius + p.xyz.y;
+      items[offset + i + 2] = v.vertices[i + 2] + p.xyz.z;
     }
   }
 

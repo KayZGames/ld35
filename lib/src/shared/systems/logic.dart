@@ -40,3 +40,21 @@ class ShapeShiftingSystem extends EntityProcessingSystem {
   bool checkProcessing() => shapeshift;
 
 }
+
+
+class MovementSystem extends EntityProcessingSystem {
+  Mapper<Position> pm;
+  Mapper<Velocity> vm;
+
+  MovementSystem() : super(Aspect.getAspectForAllOf([Position, Velocity]));
+
+  @override
+  void processEntity(Entity entity) {
+    var p = pm[entity];
+    var v = vm[entity];
+
+    p.xyz += v.xyz * world.delta;
+
+    print(p.xyz);
+  }
+}

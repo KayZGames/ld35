@@ -28,21 +28,23 @@ class Game extends GameBase {
     var tm = world.getManager(TagManager) as TagManager;
     var player = addEntity([
       new Position(0.0, 0.0, 0.0),
+      new Velocity(0.0, 0.0, 100.0),
       new Vertices.circle(),
       new Size(PI * 100 * 100, 100.0)
     ]);
     tm.register(player, playerTag);
 
+    addEntity([new Position(0.0, 0.0, -200.0), new TunnelSegment(200.0, 100.0)]);
     addEntity([new Position(0.0, 0.0, -100.0), new TunnelSegment(200.0, 100.0)]);
-    addEntity([new Position(0.0, 0.0, 0.0), new TunnelSegment(200.0, 100.0)]);
-    addEntity([new Position(0.0, 0.0, 100.0), new TunnelSegment(200.0, 100.0)]);
   }
 
   Map<int, List<EntitySystem>> getSystems() {
     return {
       GameBase.rendering: [
+        new TunnelSegmentSpawner(),
         new TweeningSystem(),
         new InputHandlingSystem(canvas),
+        new MovementSystem(),
         new ShapeShiftingSystem(),
         new WebGlCanvasCleaningSystem(ctx),
         new TunnelSegmentRenderingSystem(ctx),
