@@ -9,4 +9,4 @@ part 'src/shared/systems/spawner.dart';
 
 const int segmentCount = 60;
 const String playerTag = 'player';
-const double playerRadius = 10.0;
+const double playerRadius = 20.0;

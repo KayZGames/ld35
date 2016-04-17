@@ -39,8 +39,8 @@ class Game extends GameBase {
     addEntity(
         [new Position(0.0, 0.0, -100.0), new TunnelSegment(200.0, 100.0)]);
 
-    for (int i = -4; i < 5; i++) {
-      for (int j = -4; j < 5; j++) {
+    for (int i = -2; i < 3; i++) {
+      for (int j = -2; j < 3; j++) {
         addEntity([
           new Position(i * playerRadius * 4, j * playerRadius * 4, 1000.0),
           new Obstacle(0)
