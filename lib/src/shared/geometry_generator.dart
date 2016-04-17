@@ -49,10 +49,7 @@ class GeometryGenerator {
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < segmentCount ~/ 4; j++) {
         final index = verticesPerSegment * (i * (segmentCount ~/ 4) + j + 1);
-        final angle =
-            -PI / 4 + 2 * PI * (i * (segmentCount ~/ 4) + j) / segmentCount;
-        var x = cos(angle);
-        var y = sin(angle);
+        var x, y;
         switch (i) {
           case 0:
             x = 1.0;

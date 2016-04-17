@@ -7,7 +7,7 @@ class PlayerRenderingSystem extends WebGlRenderingSystem {
 
   Float32List items;
   Uint16List indices;
-  List<Attrib> attribsutes;
+  List<Attrib> attributes;
 
   int valuesPerItem = 3;
 
@@ -15,7 +15,7 @@ class PlayerRenderingSystem extends WebGlRenderingSystem {
 
   PlayerRenderingSystem(RenderingContext gl)
       : super(gl, Aspect.getAspectForAllOf([Position, Vertices, Size])) {
-    attribsutes = [new Attrib('aPos', valuesPerItem)];
+    attributes = [new Attrib('aPos', valuesPerItem)];
   }
 
   @override
@@ -31,7 +31,7 @@ class PlayerRenderingSystem extends WebGlRenderingSystem {
       indices[indicesOffset + i] = v.indices[i];
     }
     for (int i = 0; i < v.vertices.length; i += 3) {
-      items[offset + i] = v.vertices[i] * s.radius  + p.xyz.x;
+      items[offset + i] = v.vertices[i] * s.radius + p.xyz.x;
       items[offset + i + 1] = v.vertices[i + 1] * s.radius + p.xyz.y;
       items[offset + i + 2] = v.vertices[i + 2] + p.xyz.z;
     }
@@ -42,7 +42,7 @@ class PlayerRenderingSystem extends WebGlRenderingSystem {
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewProjection'),
         false, vpmm.create3dViewProjectionMatrix().storage);
 
-    bufferElements(attribsutes, items, indices);
+    bufferElements(attributes, items, indices);
     gl.drawElements(TRIANGLES, indices.length, UNSIGNED_SHORT, 0);
   }
 
@@ -64,7 +64,7 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
 
   Float32List items;
   Uint16List indices;
-  List<Attrib> attribsutes;
+  List<Attrib> attributes;
 
   int valuesPerItem = 3;
   int segmentsPerTunnelSegment = 64 * 2;
@@ -73,7 +73,7 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
 
   TunnelSegmentRenderingSystem(RenderingContext gl)
       : super(gl, Aspect.getAspectForAllOf([Position, TunnelSegment])) {
-    attribsutes = [new Attrib('aPos', valuesPerItem)];
+    attributes = [new Attrib('aPos', valuesPerItem)];
   }
 
   @override
@@ -108,9 +108,12 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
       indices[loopIndicesOffset + 4] = loopOffset + 1;
       indices[loopIndicesOffset + 5] = loopOffset + 3;
     }
-    indices[indicesOffset + segmentsPerTunnelSegment * 3 - 4] = offset ~/ valuesPerItem;
-    indices[indicesOffset + segmentsPerTunnelSegment * 3 - 3] = offset ~/ valuesPerItem;
-    indices[indicesOffset + segmentsPerTunnelSegment * 3 - 1] = offset ~/ valuesPerItem + 1;
+    indices[indicesOffset + segmentsPerTunnelSegment * 3 - 4] =
+        offset ~/ valuesPerItem;
+    indices[indicesOffset + segmentsPerTunnelSegment * 3 - 3] =
+        offset ~/ valuesPerItem;
+    indices[indicesOffset + segmentsPerTunnelSegment * 3 - 1] =
+        offset ~/ valuesPerItem + 1;
   }
 
   @override
@@ -119,7 +122,7 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
         false, vpmm.create3dViewProjectionMatrix().storage);
     gl.uniform1f(gl.getUniformLocation(program, 'uTime'), time);
 
-    bufferElements(attribsutes, items, indices);
+    bufferElements(attributes, items, indices);
     gl.drawElements(TRIANGLES, indices.length, UNSIGNED_SHORT, 0);
   }
 
@@ -133,4 +136,105 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
   String get vShaderFile => 'TunnelSegmentRenderingSystem';
   @override
   String get fShaderFile => 'TunnelSegmentRenderingSystem';
+}
+
+class ObstacleRenderingSystem extends WebGlRenderingSystem {
+  Mapper<Position> pm;
+  Mapper<Obstacle> om;
+
+  Float32List items;
+  Uint16List indices;
+  List<Attrib> attributes;
+
+  int valuesPerItem = 3;
+  int segmentsPerObstacle = segmentCount * 2;
+
+  WebGlViewProjectionMatrixManager vpmm;
+
+  ObstacleRenderingSystem(RenderingContext gl)
+      : super(gl, Aspect.getAspectForAllOf([Obstacle, Position])) {
+    attributes = [new Attrib('aPos', 3)];
+  }
+
+  @override
+  void processEntity(int index, Entity entity) {
+    var o = om[entity];
+    var p = pm[entity];
+
+    final itemCount = valuesPerItem * segmentsPerObstacle;
+    var offset = index * itemCount;
+    var indicesOffset = index * segmentsPerObstacle * 3;
+    for (int i = 0; i < segmentsPerObstacle; i += 2) {
+      final loopOffset = offset + i * valuesPerItem;
+      final loopIndicesOffset = indicesOffset + i * 3;
+
+      final angle = -PI / 4 + 2 * PI * i / segmentsPerObstacle;
+      items[loopOffset] = p.xyz.x + cos(angle) * playerRadius * 1.1;
+      items[loopOffset + 1] = p.xyz.y + sin(angle) * playerRadius * 1.1;
+      items[loopOffset + 2] = p.xyz.z;
+
+      createBorderVertex(loopOffset, p, i);
+
+      indices[loopIndicesOffset] = loopOffset ~/ valuesPerItem;
+      indices[loopIndicesOffset + 1] = loopOffset ~/ valuesPerItem + 1;
+      indices[loopIndicesOffset + 2] = loopOffset ~/ valuesPerItem + 2;
+      indices[loopIndicesOffset + 3] = loopOffset ~/ valuesPerItem + 2;
+      indices[loopIndicesOffset + 4] = loopOffset ~/ valuesPerItem + 1;
+      indices[loopIndicesOffset + 5] = loopOffset ~/ valuesPerItem + 3;
+    }
+    indices[indicesOffset + segmentsPerObstacle * 3 - 1] =
+        offset ~/ valuesPerItem + 1;
+    indices[indicesOffset + segmentsPerObstacle * 3 - 3] =
+        offset ~/ valuesPerItem;
+    indices[indicesOffset + segmentsPerObstacle * 3 - 4] =
+        offset ~/ valuesPerItem;
+  }
+
+  void createBorderVertex(int loopOffset, Position p, int segment) {
+    var x, y;
+    var i = segment ~/ (segmentsPerObstacle ~/ 4);
+    var j = segment % (segmentsPerObstacle ~/ 4);
+    switch (i) {
+      case 0:
+        x = 1.0;
+        y = -1.0 + 2 * (j / (segmentsPerObstacle ~/ 4));
+        break;
+      case 1:
+        x = 1.0 - 2 * (j / (segmentsPerObstacle ~/ 4));
+        y = 1.0;
+        break;
+      case 2:
+        x = -1.0;
+        y = 1.0 - 2 * (j / (segmentsPerObstacle ~/ 4));
+        break;
+      case 3:
+        x = -1.0 + 2 * (j / (segmentsPerObstacle ~/ 4));
+        y = -1.0;
+        break;
+    }
+    items[loopOffset + 3] = p.xyz.x + x * playerRadius * 2;
+    items[loopOffset + 4] = p.xyz.y + y * playerRadius * 2;
+    items[loopOffset + 5] = p.xyz.z;
+
+  }
+
+  @override
+  void render(int length) {
+    gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewProjection'),
+        false, vpmm.create3dViewProjectionMatrix().storage);
+
+    bufferElements(attributes, items, indices);
+    gl.drawElements(TRIANGLES, indices.length, UNSIGNED_SHORT, 0);
+  }
+
+  @override
+  void updateLength(int length) {
+    items = new Float32List(length * segmentsPerObstacle * valuesPerItem);
+    indices = new Uint16List(length * segmentsPerObstacle * 3);
+  }
+
+  @override
+  String get vShaderFile => 'ObstacleRenderingSystem';
+  @override
+  String get fShaderFile => 'ObstacleRenderingSystem';
 }

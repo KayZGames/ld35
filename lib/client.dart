@@ -30,12 +30,23 @@ class Game extends GameBase {
       new Position(0.0, 0.0, 0.0),
       new Velocity(0.0, 0.0, 100.0),
       new Vertices.circle(),
-      new Size(PI * 10 * 10, 10.0)
+      new Size(PI * playerRadius * playerRadius, playerRadius)
     ]);
     tm.register(player, playerTag);
 
-    addEntity([new Position(0.0, 0.0, -200.0), new TunnelSegment(200.0, 100.0)]);
-    addEntity([new Position(0.0, 0.0, -100.0), new TunnelSegment(200.0, 100.0)]);
+    addEntity(
+        [new Position(0.0, 0.0, -200.0), new TunnelSegment(200.0, 100.0)]);
+    addEntity(
+        [new Position(0.0, 0.0, -100.0), new TunnelSegment(200.0, 100.0)]);
+
+    for (int i = -4; i < 5; i++) {
+      for (int j = -4; j < 5; j++) {
+        addEntity([
+          new Position(i * playerRadius * 4, j * playerRadius * 4, 1000.0),
+          new Obstacle(0)
+        ]);
+      }
+    }
   }
 
   Map<int, List<EntitySystem>> getSystems() {
@@ -47,6 +58,7 @@ class Game extends GameBase {
         new MovementSystem(),
         new ShapeShiftingSystem(),
         new WebGlCanvasCleaningSystem(ctx),
+        new ObstacleRenderingSystem(ctx),
         new TunnelSegmentRenderingSystem(ctx),
         new PlayerRenderingSystem(ctx),
       ],

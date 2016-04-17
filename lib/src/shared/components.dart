@@ -20,6 +20,11 @@ class TunnelSegment extends Component {
   TunnelSegment(this.radius, this.length);
 }
 
+class Obstacle extends Component {
+  int type;
+  Obstacle(this.type);
+}
+
 class Vertices extends Component implements Tweenable {
   static final int tweenVertices = 0;
 
