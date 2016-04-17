@@ -16,7 +16,7 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
   bool checkProcessing() {
     var player = tm.getEntity(playerTag);
     var p = pm[player];
-    return p.xyz.z ~/ 100 > lastSegment - 5;
+    return p.xyz.z ~/ 100 > lastSegment - 100;
   }
 
 

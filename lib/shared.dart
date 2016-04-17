@@ -7,5 +7,5 @@ part 'src/shared/managers.dart';
 part 'src/shared/systems/logic.dart';
 part 'src/shared/systems/spawner.dart';
 
-const int segmentCount = 64;
+const int segmentCount = 60;
 const String playerTag = 'player';

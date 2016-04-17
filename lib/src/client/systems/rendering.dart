@@ -113,18 +113,10 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
     indices[indicesOffset + segmentsPerTunnelSegment * 3 - 1] = offset ~/ valuesPerItem + 1;
   }
 
-  bool done = false;
   @override
   void render(int length) {
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewProjection'),
         false, vpmm.create3dViewProjectionMatrix().storage);
-
-    if (!done) {
-      print(items);
-      print(items.length ~/ 3);
-      print(indices);
-      done = true;
-    }
 
     bufferElements(attribsutes, items, indices);
     gl.drawElements(TRIANGLES, indices.length, UNSIGNED_SHORT, 0);

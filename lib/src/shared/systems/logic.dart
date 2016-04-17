@@ -5,7 +5,7 @@ class ShapeShiftingSystem extends EntityProcessingSystem {
   Mapper<Size> sm;
 
   bool shapeshift = false;
-  int maxShapes = 2;
+  int maxShapes = 3;
   int currentShape = 0;
 
   ShapeShiftingSystem() : super(Aspect.getAspectForAllOf([Vertices, Size]));
