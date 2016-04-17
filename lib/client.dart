@@ -12,7 +12,6 @@ part 'src/client/systems/events.dart';
 part 'src/client/systems/rendering.dart';
 
 class Game extends GameBase {
-
   Game() : super.noAssets('ld35', '#game', 800, 600, webgl: true) {
     Tween.combinedAttributesLimit = (segmentCount + 1) * 3;
 
@@ -27,8 +26,11 @@ class Game extends GameBase {
 
   void createEntities() {
     var tm = world.getManager(TagManager) as TagManager;
-    var player =
-        addEntity([new Position(0.0, 0.0, 0.0), new Vertices.circle(), new Size(PI * 100 * 100, 100.0)]);
+    var player = addEntity([
+      new Position(0.0, 0.0, 0.0),
+      new Vertices.circle(),
+      new Size(PI * 100 * 100, 100.0)
+    ]);
     tm.register(player, playerTag);
   }
 

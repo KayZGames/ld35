@@ -39,7 +39,7 @@ class PlayerRenderingSystem extends WebGlRenderingSystem {
   @override
   void render(int length) {
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewProjection'),
-        false, vpmm.create2dViewProjectionMatrix().storage);
+        false, vpmm.create3dViewProjectionMatrix().storage);
 
     bufferElements(attribsutes, items, indices);
     gl.drawElements(TRIANGLES, indices.length, UNSIGNED_SHORT, 0);
