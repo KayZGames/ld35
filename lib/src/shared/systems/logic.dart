@@ -16,7 +16,8 @@ class ShapeShiftingSystem extends EntityProcessingSystem {
     var s = sm[entity];
 
     new Tween.to(v, Vertices.tweenVertices, 1.0)
-      ..targetValues = GeometryGenerator.shapeGenerators[currentShape]().vertices
+      ..targetValues =
+          GeometryGenerator.shapeGenerators[currentShape]().vertices
       ..easing = Elastic.OUT
       ..start(tweenManager);
 
@@ -24,7 +25,6 @@ class ShapeShiftingSystem extends EntityProcessingSystem {
 
     shapeshift = false;
   }
-
 
   void nextShape() {
     currentShape = (currentShape + 1) % maxShapes;
@@ -38,9 +38,7 @@ class ShapeShiftingSystem extends EntityProcessingSystem {
 
   @override
   bool checkProcessing() => shapeshift;
-
 }
-
 
 class MovementSystem extends EntityProcessingSystem {
   Mapper<Position> pm;
@@ -55,4 +53,42 @@ class MovementSystem extends EntityProcessingSystem {
 
     p.xyz += v.xyz * world.delta;
   }
+}
+
+class PlayerAccelerationSystem extends EntityProcessingSystem {
+  Mapper<Velocity> vm;
+  Mapper<Position> pm;
+
+  PlayerAccelerationSystem()
+      : super(Aspect.getAspectForAllOf([Position, Velocity]));
+
+  @override
+  void processEntity(Entity entity) {
+    var p = pm[entity];
+    var v = vm[entity];
+
+    v.xyz.z = min(500.0, 100.0 + p.xyz.z / 100.0);
+  }
+}
+
+class DespawningSystem extends EntitySystem {
+  TagManager tm;
+  Mapper<Position> pm;
+
+  DespawningSystem() : super(Aspect.getAspectForAllOf([Position]));
+
+  @override
+  void processEntities(Iterable<Entity> entities) {
+    var player = tm.getEntity(playerTag);
+    var playerPos = pm[player];
+    entities.forEach((entity) {
+      var p = pm[entity];
+      if (p.xyz.z + 500.0 < playerPos.xyz.z) {
+        entity.deleteFromWorld();
+      }
+    });
+  }
+
+  @override
+  bool checkProcessing() => true;
 }

@@ -53,14 +53,17 @@ class Game extends GameBase {
     return {
       GameBase.rendering: [
         new TunnelSegmentSpawner(),
+        new ObstacleSpawner(),
         new TweeningSystem(),
         new InputHandlingSystem(canvas),
         new MovementSystem(),
+        new PlayerAccelerationSystem(),
         new ShapeShiftingSystem(),
         new WebGlCanvasCleaningSystem(ctx),
         new ObstacleRenderingSystem(ctx),
         new TunnelSegmentRenderingSystem(ctx),
         new PlayerRenderingSystem(ctx),
+        new DespawningSystem(),
       ],
       GameBase.physics: [
         // add at least one
