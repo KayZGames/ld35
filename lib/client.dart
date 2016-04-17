@@ -32,6 +32,10 @@ class Game extends GameBase {
       new Size(PI * 100 * 100, 100.0)
     ]);
     tm.register(player, playerTag);
+
+    addEntity([new Position(0.0, 0.0, -100.0), new TunnelSegment(200.0, 100.0)]);
+    addEntity([new Position(0.0, 0.0, 0.0), new TunnelSegment(200.0, 100.0)]);
+    addEntity([new Position(0.0, 0.0, 100.0), new TunnelSegment(200.0, 100.0)]);
   }
 
   Map<int, List<EntitySystem>> getSystems() {
@@ -41,6 +45,7 @@ class Game extends GameBase {
         new InputHandlingSystem(canvas),
         new ShapeShiftingSystem(),
         new WebGlCanvasCleaningSystem(ctx),
+        new TunnelSegmentRenderingSystem(ctx),
         new PlayerRenderingSystem(ctx),
       ],
       GameBase.physics: [

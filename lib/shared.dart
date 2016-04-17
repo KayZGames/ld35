@@ -6,5 +6,5 @@ part 'src/shared/managers.dart';
 //part 'src/shared/systems/name.dart';
 part 'src/shared/systems/logic.dart';
 
-const int segmentCount = 32;
+const int segmentCount = 64;
 const String playerTag = 'player';

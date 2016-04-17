@@ -10,6 +10,11 @@ class Size extends Component {
   Size(this.area, this.radius);
 }
 
+class TunnelSegment extends Component {
+  double radius, length;
+  TunnelSegment(this.radius, this.length);
+}
+
 class Vertices extends Component implements Tweenable {
   static final int tweenVertices = 0;
 
