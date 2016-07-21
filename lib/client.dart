@@ -12,12 +12,16 @@ part 'src/client/systems/events.dart';
 part 'src/client/systems/rendering.dart';
 
 class Game extends GameBase {
+  CanvasElement canvasHud;
+
   Game() : super.noAssets('ld35', '#game', 800, 600, webgl: true) {
     Tween.combinedAttributesLimit = (segmentCount + 1) * 3;
 
     world.addManager(new GameStateManager());
     world.addManager(new WebGlViewProjectionMatrixManager());
     world.addManager(new TagManager());
+
+    canvasHud = querySelector('#hud');
 
     handleResize(window.innerWidth, window.innerHeight);
     window.onResize
@@ -53,6 +57,8 @@ class Game extends GameBase {
         new TunnelSegmentRenderingSystem(ctx),
         new PlayerRenderingSystem(ctx),
         new DespawningSystem(),
+        new CanvasCleaningSystem(canvasHud),
+        new DistanceTraveledRenderingSystem(canvasHud)
       ],
       GameBase.physics: [
         // add at least one
@@ -64,13 +70,18 @@ class Game extends GameBase {
   void handleResize(int width, int height) {
     width = max(800, width);
     height = max(600, height);
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.width = '${width}px';
-    canvas.style.height = '${height}px';
+    resizeCanvas(canvas, width, height);
+    resizeCanvas(canvasHud, width, height);
     (ctx as RenderingContext).viewport(0, 0, width, height);
     (world.getManager(GameStateManager) as GameStateManager)
       ..width = width
       ..height = height;
+  }
+
+  void resizeCanvas(CanvasElement canvas, int width, int height) {
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.width = '${width}px';
+    canvas.style.height = '${height}px';
   }
 }

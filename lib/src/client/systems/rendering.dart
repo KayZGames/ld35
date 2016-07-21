@@ -54,6 +54,7 @@ class PlayerRenderingSystem extends WebGlRenderingSystem {
 
   @override
   String get fShaderFile => 'PlayerRenderingSystem';
+
   @override
   String get vShaderFile => 'PlayerRenderingSystem';
 }
@@ -134,6 +135,7 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
 
   @override
   String get vShaderFile => 'TunnelSegmentRenderingSystem';
+
   @override
   String get fShaderFile => 'TunnelSegmentRenderingSystem';
 }
@@ -190,7 +192,8 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
         offset ~/ valuesPerItem;
   }
 
-  void createShapeBorderVertex(int segment, int loopOffset, Position p, Color c, int type) {
+  void createShapeBorderVertex(
+      int segment, int loopOffset, Position p, Color c, int type) {
     var x = 0.0, y = 0.0;
     switch (type) {
       case 0:
@@ -257,7 +260,6 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
     items[loopOffset + 9] = c.r;
     items[loopOffset + 10] = c.g;
     items[loopOffset + 11] = c.b;
-
   }
 
   @override
@@ -277,6 +279,27 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
 
   @override
   String get vShaderFile => 'ObstacleRenderingSystem';
+
   @override
   String get fShaderFile => 'ObstacleRenderingSystem';
+}
+
+class DistanceTraveledRenderingSystem extends EntityProcessingSystem {
+  Mapper<Position> pm;
+  GameStateManager gsm;
+  CanvasElement canvasHud;
+
+  DistanceTraveledRenderingSystem(this.canvasHud)
+      : super(Aspect.getAspectForAllOf([Controller, Position]));
+
+  @override
+  void processEntity(Entity entity) {
+    var p = pm[entity];
+    var ctx = canvasHud.context2D;
+    var distance = (p.xyz.z ~/ 1000).toString();
+    ctx
+      ..font = '20px Verdana'
+      ..fillText('Obstacles:', gsm.width - 200.0, 20.0)
+      ..fillText(distance, gsm.width - ctx.measureText(distance).width, 20.0);
+  }
 }
