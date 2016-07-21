@@ -26,7 +26,7 @@ class ShapeShiftingSystem extends EntityProcessingSystem {
     shapeshift = false;
   }
 
-  void set nextShape(int nextShape) {
+  set nextShape(int nextShape) {
     currentShape = nextShape;
     shapeshift = true;
   }

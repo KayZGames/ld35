@@ -25,6 +25,11 @@ class Obstacle extends Component {
   Obstacle(this.type);
 }
 
+class Color extends Component {
+  double r, g, b;
+  Color(this.r, this.g, this.b);
+}
+
 class Vertices extends Component implements Tweenable {
   static final int tweenVertices = 0;
 

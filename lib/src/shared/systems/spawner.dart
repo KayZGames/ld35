@@ -21,19 +21,25 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
 }
 
 class ObstacleSpawner extends VoidEntitySystem {
+  ShapeShiftingSystem sss;
   TagManager tm;
   Mapper<Position> pm;
   int lastObstacle = 1;
 
   @override
   void processSystem() {
+    var r = 0.5 + random.nextDouble() * 0.3;
+    var g = 0.5 + random.nextDouble() * 0.3;
+    var b = 0.5 + random.nextDouble() * 0.3;
     for (int i = -2; i < 3; i++) {
       for (int j = -2; j < 3; j++) {
-        var obstacleType = isBorder(i, j) ? -1 : random.nextInt(2);
+        var obstacleType =
+            isBorder(i, j) ? -1 : random.nextInt(sss.maxShapes + 1) - 1;
         world.createAndAddEntity([
           new Position(i * playerRadius * 4, j * playerRadius * 4,
               lastObstacle * 1000.0),
-          new Obstacle(obstacleType)
+          new Obstacle(obstacleType),
+          new Color(r, g, b)
         ]);
       }
     }

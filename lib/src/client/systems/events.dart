@@ -12,7 +12,6 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
   @override
   void processEntity(Entity entity) {
     var p = pm[entity];
-    var c = cm[entity];
     if (up) {
       p.xyz.y = playerRadius * -4;
     } else if (down) {
@@ -33,9 +32,11 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
   void handleInput(KeyboardEvent event, bool pressed) {
     super.handleInput(event, pressed);
     if (pressed) {
-      if (event.keyCode >= KeyCode.ONE && event.keyCode < KeyCode.ONE + sss.maxShapes) {
+      if (event.keyCode >= KeyCode.ONE &&
+          event.keyCode < KeyCode.ONE + sss.maxShapes) {
         sss.nextShape = event.keyCode - KeyCode.ONE;
-      } else if (event.keyCode >= KeyCode.NUM_ONE && event.keyCode < KeyCode.NUM_ONE + sss.maxShapes) {
+      } else if (event.keyCode >= KeyCode.NUM_ONE &&
+          event.keyCode < KeyCode.NUM_ONE + sss.maxShapes) {
         sss.nextShape = event.keyCode - KeyCode.NUM_ONE;
       }
     }

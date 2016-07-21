@@ -141,25 +141,27 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
 class ObstacleRenderingSystem extends WebGlRenderingSystem {
   Mapper<Position> pm;
   Mapper<Obstacle> om;
+  Mapper<Color> cm;
 
   Float32List items;
   Uint16List indices;
   List<Attrib> attributes;
 
-  int valuesPerItem = 3;
+  int valuesPerItem = 6;
   int segmentsPerObstacle = segmentCount * 2;
 
   WebGlViewProjectionMatrixManager vpmm;
 
   ObstacleRenderingSystem(RenderingContext gl)
-      : super(gl, Aspect.getAspectForAllOf([Obstacle, Position])) {
-    attributes = [new Attrib('aPos', 3)];
+      : super(gl, Aspect.getAspectForAllOf([Obstacle, Position, Color])) {
+    attributes = [new Attrib('aPos', 3), new Attrib('aColor', 3)];
   }
 
   @override
   void processEntity(int index, Entity entity) {
     var o = om[entity];
     var p = pm[entity];
+    var c = cm[entity];
     var type = o.type;
 
     final itemCount = valuesPerItem * segmentsPerObstacle;
@@ -169,9 +171,9 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
       final loopOffset = offset + i * valuesPerItem;
       final loopIndicesOffset = indicesOffset + i * 3;
 
-      createShapeBorderVertex(i, loopOffset, p, type);
+      createShapeBorderVertex(i, loopOffset, p, c, type);
 
-      createBorderVertex(loopOffset, p, i);
+      createBorderVertex(loopOffset, p, c, i);
 
       indices[loopIndicesOffset] = loopOffset ~/ valuesPerItem;
       indices[loopIndicesOffset + 1] = loopOffset ~/ valuesPerItem + 1;
@@ -188,7 +190,7 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
         offset ~/ valuesPerItem;
   }
 
-  void createShapeBorderVertex(int segment, int loopOffset, Position p, int type) {
+  void createShapeBorderVertex(int segment, int loopOffset, Position p, Color c, int type) {
     var x = 0.0, y = 0.0;
     switch (type) {
       case 0:
@@ -222,9 +224,12 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
     items[loopOffset] = p.xyz.x + x * playerRadius;
     items[loopOffset + 1] = p.xyz.y + y * playerRadius;
     items[loopOffset + 2] = p.xyz.z;
+    items[loopOffset + 3] = c.r;
+    items[loopOffset + 4] = c.g;
+    items[loopOffset + 5] = c.b;
   }
 
-  void createBorderVertex(int loopOffset, Position p, int segment) {
+  void createBorderVertex(int loopOffset, Position p, Color c, int segment) {
     var x, y;
     var i = segment ~/ (segmentsPerObstacle ~/ 4);
     var j = segment % (segmentsPerObstacle ~/ 4);
@@ -246,9 +251,12 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
         y = -1.0;
         break;
     }
-    items[loopOffset + 3] = p.xyz.x + x * playerRadius * 2;
-    items[loopOffset + 4] = p.xyz.y + y * playerRadius * 2;
-    items[loopOffset + 5] = p.xyz.z;
+    items[loopOffset + 6] = p.xyz.x + x * playerRadius * 2;
+    items[loopOffset + 7] = p.xyz.y + y * playerRadius * 2;
+    items[loopOffset + 8] = p.xyz.z;
+    items[loopOffset + 9] = c.r;
+    items[loopOffset + 10] = c.g;
+    items[loopOffset + 11] = c.b;
 
   }
 
