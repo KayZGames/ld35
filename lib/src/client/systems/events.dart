@@ -1,43 +1,43 @@
 part of client;
 
-class InputHandlingSystem extends VoidEntitySystem {
+class InputHandlingSystem extends GenericInputHandlingSystem {
   ShapeShiftingSystem sss;
-  GameStateManager gsm;
-  TagManager tm;
   Mapper<Position> pm;
+  Mapper<Controller> cm;
 
-  CanvasElement canvas;
-  num deltaY = 0.0;
   Point<double> position = new Point<double>(0.0, 0.0);
 
-  InputHandlingSystem(this.canvas);
+  InputHandlingSystem() : super(Aspect.getAspectForAllOf([Controller]));
 
   @override
-  void initialize() {
-    canvas.onMouseWheel.listen(handleMouseWheel);
-    canvas.onMouseMove.listen(handleMouseMove);
-  }
-
-  @override
-  void processSystem() {
-    if (deltaY > 0) {
-      sss.nextShape();
-    } else if (deltaY < 0) {
-      sss.previousShape();
+  void processEntity(Entity entity) {
+    var p = pm[entity];
+    var c = cm[entity];
+    if (up) {
+      p.xyz.y = playerRadius * -4;
+    } else if (down) {
+      p.xyz.y = playerRadius * 4;
+    } else {
+      p.xyz.y = 0.0;
     }
-    deltaY = 0.0;
-
-    var player = tm.getEntity(playerTag);
-    var p = pm[player];
-    p.xyz.xy = new Vector2(position.x, position.y);
+    if (left) {
+      p.xyz.x = playerRadius * -4;
+    } else if (right) {
+      p.xyz.x = playerRadius * 4;
+    } else {
+      p.xyz.x = 0.0;
+    }
   }
 
-  void handleMouseWheel(WheelEvent event) {
-    deltaY = event.deltaY;
-    event.preventDefault();
-  }
-
-  void handleMouseMove(MouseEvent event) {
-    position = event.offset - new Point(gsm.width / 2, gsm.height / 2);
+  @override
+  void handleInput(KeyboardEvent event, bool pressed) {
+    super.handleInput(event, pressed);
+    if (pressed) {
+      if (event.keyCode >= KeyCode.ONE && event.keyCode < KeyCode.ONE + sss.maxShapes) {
+        sss.nextShape = event.keyCode - KeyCode.ONE;
+      } else if (event.keyCode >= KeyCode.NUM_ONE && event.keyCode < KeyCode.NUM_ONE + sss.maxShapes) {
+        sss.nextShape = event.keyCode - KeyCode.NUM_ONE;
+      }
+    }
   }
 }

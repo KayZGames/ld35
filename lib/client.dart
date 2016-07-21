@@ -24,38 +24,27 @@ class Game extends GameBase {
         .listen((_) => handleResize(window.innerWidth, window.innerHeight));
   }
 
+  @override
   void createEntities() {
     var tm = world.getManager(TagManager) as TagManager;
     var player = addEntity([
       new Position(0.0, 0.0, 0.0),
-      new Velocity(0.0, 0.0, 10.0),
+      new Velocity(0.0, 0.0, 4000.0),
       new Vertices.circle(),
-      new Size(PI * playerRadius * playerRadius, playerRadius)
+      new Size(PI * playerRadius * playerRadius, playerRadius),
+      new Controller()
     ]);
     tm.register(player, playerTag);
-
-    addEntity(
-        [new Position(0.0, 0.0, -200.0), new TunnelSegment(200.0, 100.0)]);
-    addEntity(
-        [new Position(0.0, 0.0, -100.0), new TunnelSegment(200.0, 100.0)]);
-
-    for (int i = -2; i < 3; i++) {
-      for (int j = -2; j < 3; j++) {
-        world.createAndAddEntity([
-          new Position(i * playerRadius * 4, j * playerRadius * 4, 1000.0),
-          new Obstacle(random.nextInt(2))
-        ]);
-      }
-    }
   }
 
+  @override
   Map<int, List<EntitySystem>> getSystems() {
     return {
       GameBase.rendering: [
         new TunnelSegmentSpawner(),
         new ObstacleSpawner(),
         new TweeningSystem(),
-        new InputHandlingSystem(canvas),
+        new InputHandlingSystem(),
         new MovementSystem(),
         new PlayerAccelerationSystem(),
         new ShapeShiftingSystem(),
@@ -71,6 +60,7 @@ class Game extends GameBase {
     };
   }
 
+  @override
   void handleResize(int width, int height) {
     width = max(800, width);
     height = max(600, height);

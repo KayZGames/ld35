@@ -189,7 +189,7 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
   }
 
   void createShapeBorderVertex(int segment, int loopOffset, Position p, int type) {
-    var x, y;
+    var x = 0.0, y = 0.0;
     switch (type) {
       case 0:
         final angle = -PI / 4 + 2 * PI * segment / segmentsPerObstacle;
@@ -219,8 +219,8 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
         }
         break;
     }
-    items[loopOffset] = p.xyz.x + x * playerRadius * 1.1;
-    items[loopOffset + 1] = p.xyz.y + y * playerRadius * 1.1;
+    items[loopOffset] = p.xyz.x + x * playerRadius;
+    items[loopOffset + 1] = p.xyz.y + y * playerRadius;
     items[loopOffset + 2] = p.xyz.z;
   }
 

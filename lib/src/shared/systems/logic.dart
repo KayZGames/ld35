@@ -26,13 +26,8 @@ class ShapeShiftingSystem extends EntityProcessingSystem {
     shapeshift = false;
   }
 
-  void nextShape() {
-    currentShape = (currentShape + 1) % maxShapes;
-    shapeshift = true;
-  }
-
-  void previousShape() {
-    currentShape = (currentShape - 1) % maxShapes;
+  void set nextShape(int nextShape) {
+    currentShape = nextShape;
     shapeshift = true;
   }
 

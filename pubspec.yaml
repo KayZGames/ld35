@@ -13,3 +13,6 @@ transformers:
 - dartemis_transformer:
     additionalLibraries:
     - gamedev_helpers/gamedev_helpers.dart
+
+analyzer:
+  strong-mode: true

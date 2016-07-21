@@ -63,3 +63,5 @@ class Vertices extends Component implements Tweenable {
     }
   }
 }
+
+class Controller extends Component {}
