@@ -32,6 +32,7 @@ void main() {
         querySelector('#hud').style
           ..opacity = '0.0'
           ..display = 'none';
+        querySelector('#startGame').focus();
       });
     });
 }

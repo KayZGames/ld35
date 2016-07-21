@@ -223,9 +223,26 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
             break;
         }
         break;
+      case 2:
+        var i = segment ~/ (segmentsPerObstacle ~/ 3);
+        var j = segment % (segmentsPerObstacle ~/ 3);
+        final angle = -PI / 6 + 2 * PI * i / 3;
+        final nextAngle = -PI / 6 + 2 * PI * (i + 1) / 3;
+        x = cos(angle) +
+            ((cos(nextAngle) - cos(angle)) * (j / (segmentsPerObstacle ~/ 3)));
+        y = sin(angle) +
+            ((sin(nextAngle) - sin(angle)) * (j / (segmentsPerObstacle ~/ 3)));
+        break;
     }
-    items[loopOffset] = p.xyz.x + x * playerRadius;
-    items[loopOffset + 1] = p.xyz.y + y * playerRadius;
+    if (type == -1) {
+      items[loopOffset] = p.xyz.x;
+      items[loopOffset + 1] = p.xyz.y;
+    } else {
+      items[loopOffset] = p.xyz.x +
+          x * GeometryGenerator.shapeRadiusCalculators[type](playerArea);
+      items[loopOffset + 1] = p.xyz.y +
+          y * GeometryGenerator.shapeRadiusCalculators[type](playerArea);
+    }
     items[loopOffset + 2] = p.xyz.z;
     items[loopOffset + 3] = c.r;
     items[loopOffset + 4] = c.g;
