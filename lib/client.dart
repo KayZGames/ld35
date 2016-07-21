@@ -61,7 +61,7 @@ class Game extends GameBase {
         new DistanceTraveledRenderingSystem(canvasHud)
       ],
       GameBase.physics: [
-        // add at least one
+        new ObstacleCollisionDetectionSystem()
       ]
     };
   }
@@ -83,5 +83,10 @@ class Game extends GameBase {
     canvas.height = height;
     canvas.style.width = '${width}px';
     canvas.style.height = '${height}px';
+  }
+
+  Future<int> onGameOver() {
+    var gsm = world.getManager(GameStateManager) as GameStateManager;
+    return gsm.onGameOver();
   }
 }

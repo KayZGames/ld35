@@ -87,3 +87,36 @@ class DespawningSystem extends EntitySystem {
   @override
   bool checkProcessing() => true;
 }
+
+class ObstacleCollisionDetectionSystem extends EntityProcessingSystem {
+  TagManager tm;
+  Mapper<Position> pm;
+  Mapper<Obstacle> om;
+  ShapeShiftingSystem sss;
+  GameStateManager gsm;
+  int lastShape;
+
+  ObstacleCollisionDetectionSystem()
+      : super(Aspect.getAspectForAllOf([Obstacle, Position]));
+
+  @override
+  void processEntity(Entity entity) {
+    var player = tm.getEntity(playerTag);
+    var playerPos = pm[player];
+    var p = pm[entity];
+
+    var distance = playerPos.xyz.z - p.xyz.z;
+
+    if (distance <= 0.0 && distance > -500.0) {
+      lastShape = sss.currentShape;
+    } else if (lastShape != null &&
+        distance > 0.0 &&
+        distance < 500.0 &&
+        p.xyz.xy == playerPos.xyz.xy) {
+      if (lastShape != om[entity].type) {
+        gsm.gameOver(playerPos.xyz.z ~/ 1000 - 1);
+      }
+      lastShape = null;
+    }
+  }
+}

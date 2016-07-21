@@ -4,6 +4,7 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
   ShapeShiftingSystem sss;
   Mapper<Position> pm;
   Mapper<Controller> cm;
+  GameStateManager gsm;
 
   Point<double> position = new Point<double>(0.0, 0.0);
 

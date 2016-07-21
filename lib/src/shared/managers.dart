@@ -2,6 +2,15 @@ part of shared;
 
 class GameStateManager extends Manager {
   int width, height;
+  var _completer = new Completer<int>();
+
+  Future<int> onGameOver() {
+    return _completer.future;
+  }
+
+  void gameOver(int score) {
+    _completer.complete(score);
+  }
 }
 
 class WebGlViewProjectionMatrixManager extends Manager {
