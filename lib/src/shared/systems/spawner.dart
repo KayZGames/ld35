@@ -31,10 +31,13 @@ class ObstacleSpawner extends VoidEntitySystem {
     var r = 0.5 + random.nextDouble() * 0.3;
     var g = 0.5 + random.nextDouble() * 0.3;
     var b = 0.5 + random.nextDouble() * 0.3;
+    var obstacles = max(1, 9 - (lastObstacle ~/ 10));
+    var obstacleList = new List.generate(9, (index) => index < obstacles ? true : false);
+    obstacleList.shuffle(random);
     for (int i = -2; i < 3; i++) {
       for (int j = -2; j < 3; j++) {
         var obstacleType =
-            isBorder(i, j) ? -1 : random.nextInt(sss.maxShapes + 1) - 1;
+            isBorder(i, j) ? -1 : obstacleList.removeLast() ? random.nextInt(sss.maxShapes - 1) : -1;
         world.createAndAddEntity([
           new Position(i * playerRadius * 4, j * playerRadius * 4,
               lastObstacle * 1000.0),
