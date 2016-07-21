@@ -10,3 +10,5 @@ part 'src/shared/systems/spawner.dart';
 const int segmentCount = 60;
 const String playerTag = 'player';
 const double playerRadius = 20.0;
+const double minSpeed = 500.0;
+const double maxSpeed = 2500.0;

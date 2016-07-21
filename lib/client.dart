@@ -29,7 +29,7 @@ class Game extends GameBase {
     var tm = world.getManager(TagManager) as TagManager;
     var player = addEntity([
       new Position(0.0, 0.0, 0.0),
-      new Velocity(0.0, 0.0, 4000.0),
+      new Velocity(0.0, 0.0, minSpeed),
       new Vertices.circle(),
       new Size(PI * playerRadius * playerRadius, playerRadius),
       new Controller()
