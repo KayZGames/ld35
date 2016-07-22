@@ -28,9 +28,9 @@ class ObstacleSpawner extends VoidEntitySystem {
 
   @override
   void processSystem() {
-    var r = 0.5 + random.nextDouble() * 0.3;
-    var g = 0.5 + random.nextDouble() * 0.3;
-    var b = 0.5 + random.nextDouble() * 0.3;
+    var r = lastObstacle % 2 * 0.5 + 0.3;
+    var g = lastObstacle % 2 * 0.5 + 0.3;
+    var b = lastObstacle % 2 * 0.5 + 0.3;
     var obstacles = max(1, 9 - (lastObstacle ~/ 7));
     var shapes = min(sss.maxShapes, 2 + lastObstacle ~/ 23);
     var obstacleList = new List.generate(9, (index) => index < obstacles ? true : false);

@@ -13,5 +13,5 @@ const String playerTag = 'player';
 const double playerRadius = 20.0;
 // initial shape is circle
 const double playerArea = playerRadius * playerRadius * PI;
-const double minSpeed = 800.0;
+const double minSpeed = 500.0;
 const double maxSpeed = 2500.0;
