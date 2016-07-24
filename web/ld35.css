@@ -104,6 +104,11 @@ h2 {
   width: 50%;
   margin: 0 auto 0 auto;
 }
+
 .speedSelection > label {
   display: block;
+}
+
+.warning {
+  color: darkred;
 }
