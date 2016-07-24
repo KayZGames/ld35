@@ -84,3 +84,12 @@ tr > td, tr > th {
 h2 {
   color: seagreen;
 }
+
+.speedSelection {
+  text-align: left;
+  width: 50%;
+  margin: 0 auto 0 auto;
+}
+.speedSelection > label {
+  display: block;
+}

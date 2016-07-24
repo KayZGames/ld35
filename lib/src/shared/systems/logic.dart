@@ -53,8 +53,9 @@ class MovementSystem extends EntityProcessingSystem {
 class PlayerAccelerationSystem extends EntityProcessingSystem {
   Mapper<Velocity> vm;
   Mapper<Position> pm;
+  double startSpeed;
 
-  PlayerAccelerationSystem()
+  PlayerAccelerationSystem(this.startSpeed)
       : super(Aspect.getAspectForAllOf([Position, Velocity]));
 
   @override
@@ -62,7 +63,7 @@ class PlayerAccelerationSystem extends EntityProcessingSystem {
     var p = pm[entity];
     var v = vm[entity];
 
-    v.xyz.z = min(maxSpeed, max(minSpeed, 100.0 + p.xyz.z / 100.0));
+    v.xyz.z = min(maxSpeed, max(startSpeed, 100.0 + p.xyz.z / 100.0));
   }
 }
 
