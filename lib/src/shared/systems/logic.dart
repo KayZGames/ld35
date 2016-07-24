@@ -96,6 +96,10 @@ class ObstacleCollisionDetectionSystem extends EntityProcessingSystem {
   ShapeShiftingSystem sss;
   GameStateManager gsm;
   int lastShape;
+  Vector3 lastPosition;
+  bool okBefore = true;
+  bool okAfter = true;
+  bool doCheck = false;
 
   ObstacleCollisionDetectionSystem()
       : super(Aspect.getAspectForAllOf([Obstacle, Position]));
@@ -110,13 +114,29 @@ class ObstacleCollisionDetectionSystem extends EntityProcessingSystem {
 
     if (distance <= 0.0 && distance > -500.0) {
       lastShape = sss.currentShape;
-    } else if (lastShape != null &&
-        distance > 0.0 &&
-        distance < 500.0 &&
-        p.xyz.xy == playerPos.xyz.xy) {
-      if (lastShape != om[entity].type) {
+      lastPosition = playerPos.xyz;
+    } else if (lastShape != null && distance > 0.0 && distance < 500.0) {
+      if (p.xyz.xy == lastPosition.xy) {
+        okBefore = lastShape == om[entity].type;
+      }
+      if (p.xyz.xy == playerPos.xyz.xy) {
+        okAfter = sss.currentShape == om[entity].type;
+      }
+      doCheck = true;
+    }
+  }
+
+  @override
+  void end() {
+    if (doCheck) {
+      if (!okBefore && !okAfter) {
+        var player = tm.getEntity(playerTag);
+        var playerPos = pm[player];
         gsm.gameOver(playerPos.xyz.z ~/ 1000 - 1);
       }
+      doCheck = false;
+      okBefore = true;
+      okAfter = true;
       lastShape = null;
     }
   }
