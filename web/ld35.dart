@@ -20,7 +20,8 @@ void startGame() {
         (querySelector('input[type=radio][name=speed]:checked')
                 as RadioButtonInputElement)
             .value);
-    querySelector('#storyContainer').style.opacity = '0.0';
+    querySelector('#storyContainer').style..opacity = '0.0';
+    querySelector('body').style.cursor = 'none';
     querySelector('#game').style.opacity = '1.0';
     querySelector('#hud').style.opacity = '1.0';
 
@@ -35,10 +36,11 @@ void startGame() {
         }
         querySelector('#storyContainer').style
           ..opacity = '1.0'
-          ..display = 'flex';
+          ..display = 'flex'
+          ..cursor = 'inherit';
         querySelector('#game').style.opacity = '0.1';
         querySelector('#hud').style.opacity = '0.1';
-        querySelector('#hud').style.cursor = 'inherit';
+        querySelector('body').style.cursor = 'inherit';
         querySelector('#startGame').focus();
       });
     });
