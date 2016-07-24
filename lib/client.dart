@@ -13,9 +13,9 @@ part 'src/client/systems/rendering.dart';
 
 class Game extends GameBase {
   CanvasElement canvasHud;
-  double startSpeed;
+  double _startSpeed = 0.0;
 
-  Game(this.startSpeed) : super.noAssets('ld35', '#game', 800, 600, webgl: true) {
+  Game() : super.noAssets('ld35', '#game', 800, 600, webgl: true) {
     Tween.combinedAttributesLimit = (segmentCount + 1) * 3;
 
     world.addManager(new GameStateManager());
@@ -34,7 +34,7 @@ class Game extends GameBase {
     var tm = world.getManager(TagManager) as TagManager;
     var player = addEntity([
       new Position(0.0, 0.0, 0.0),
-      new Velocity(0.0, 0.0, startSpeed),
+      new Velocity(0.0, 0.0, _startSpeed),
       new Vertices.circle(),
       new Size(PI * playerRadius * playerRadius, playerRadius),
       new Controller()
@@ -51,7 +51,7 @@ class Game extends GameBase {
         new TweeningSystem(),
         new InputHandlingSystem(),
         new MovementSystem(),
-        new PlayerAccelerationSystem(startSpeed),
+        new PlayerAccelerationSystem(_startSpeed),
         new ShapeShiftingSystem(),
         new WebGlCanvasCleaningSystem(ctx),
         new ObstacleRenderingSystem(ctx),
@@ -89,5 +89,10 @@ class Game extends GameBase {
   Future<int> onGameOver() {
     var gsm = world.getManager(GameStateManager) as GameStateManager;
     return gsm.onGameOver();
+  }
+
+  set startSpeed(double value) {
+    _startSpeed = value;
+    (world.getSystem(PlayerAccelerationSystem) as PlayerAccelerationSystem).startSpeed = value;
   }
 }

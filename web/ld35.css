@@ -45,28 +45,42 @@ p {
   margin-top: 10px;
 }
 
-#story {
-  color: olivedrab;
-  width: 600px;
-  margin: auto;
-  opacity: 1.0;
+#storyContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition-property: opacity;
   transition-duration: 1s;
 }
 
-canvas {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0.0;
-  transition-property: opacity;
-  transition-duration: 0.5s;
-  cursor: none;
+#storyContainer * {
   background-color: transparent;
 }
 
-button {
+#story {
+  color: olivedrab;
+  width: 600px;
+  margin: auto;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.1;
+  transition-property: opacity;
+  transition-duration: 1.0s;
+  background-color: transparent;
+}
+
+#story button {
   background-color: darkgreen;
   color: lime;
   padding: 15px;

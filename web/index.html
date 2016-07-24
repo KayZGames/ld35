@@ -1,65 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
-    <title>ld35</title>
-    <link type='text/css' rel='stylesheet' href='ld35.css'>
+  <meta charset='utf-8'>
+  <title>ld35</title>
+  <link type='text/css' rel='stylesheet' href='ld35.css'>
 </head>
 <body>
 <div id='gamecontainer'>
+  <canvas id='game' width='100%' height='100%'></canvas>
+  <canvas id='hud' width='100%' height='100%'></canvas>
+  <div id='storyContainer'>
     <div id='story'>
-        <div class='speedSelection'>
-            Select your starting speed:
-            <label>
-                <input type='radio' name='speed' value='500'>
-                Slow
-            </label>
-            <label>
-                <input type='radio' name='speed' value='800' checked>
-                Normal
-            </label>
-            <label>
-                <input type='radio' name='speed' value='1000'>
-                Fast
-            </label>
-            <label>
-                <input type='radio' name='speed' value='2000'>
-                Impossible
-            </label>
-        </div>
-        <div id='loading'>
-            <div class='text'>Fetching resources, please wait...</div>
-            <div class='spinner'></div>
-        </div>
-        <button id='startGame' title='Start Game'>Start Game</button>
-        <h2>Controls</h2>
-        <div id='controls'>
-            <p>
-            <table>
-                <thead>
-                <tr>
-                    <th>Action</th>
-                    <th>Keyboard</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>shapeshift</td>
-                    <td>1 - circle, 2 - square, 3 - triangle</td>
-                </tr>
-                <tr>
-                    <td>movement</td>
-                    <td>WASD or cursors</td>
-                </tr>
-                </tbody>
-            </table>
-            </p>
-        </div>
-        <div>Last Game: <span id='lastscore'>0</span></div>
-        <div>Highscore: <span id='highscore'>0</span></div>
+      <div class='speedSelection'>
+        Select your starting speed:
+        <label>
+          <input type='radio' name='speed' value='500'>
+          Slow
+        </label>
+        <label>
+          <input type='radio' name='speed' value='800' checked>
+          Normal
+        </label>
+        <label>
+          <input type='radio' name='speed' value='1000'>
+          Fast
+        </label>
+        <label>
+          <input type='radio' name='speed' value='2000'>
+          Impossible
+        </label>
+      </div>
+      <div id='loading'>
+        <div class='text'>Fetching resources, please wait...</div>
+        <div class='spinner'></div>
+      </div>
+      <button id='startGame' title='Start Game'>Start Game</button>
+      <h2>Controls</h2>
+      <div id='controls'>
+        <p>
+        <table>
+          <thead>
+          <tr>
+            <th>Action</th>
+            <th>Keyboard</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>shapeshift</td>
+            <td>1 - circle, 2 - square, 3 - triangle</td>
+          </tr>
+          <tr>
+            <td>movement</td>
+            <td>WASD or cursors</td>
+          </tr>
+          </tbody>
+        </table>
+        </p>
+      </div>
+      <div>Last Game: <span id='lastscore'>0</span></div>
+      <div>Highscore: <span id='highscore'>0</span></div>
     </div>
-    <canvas id='game' width='100%' height='100%'></canvas>
-    <canvas id='hud' width='100%' height='100%'></canvas>
+  </div>
 </div>
 <script type='application/dart' src='ld35.dart'></script>
 <script src='packages/browser/dart.js'></script>
