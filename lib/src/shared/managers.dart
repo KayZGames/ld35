@@ -31,7 +31,7 @@ class WebGlViewProjectionMatrixManager extends Manager {
 //    setViewMatrix(viewMatrix, new Vector3(position.x + 25.0, position.y - 25.0, position.z - 100.0),
 //        new Vector3(position.x + 10.0, position.y - 10.0, position.z + 10.0), new Vector3(0.0, -1.0, 0.0));
 
-    setViewMatrix(viewMatrix, new Vector3(position.x, position.y, position.z - 100.0),
+    setViewMatrix(viewMatrix, new Vector3(position.x, position.y, position.z - 110.0),
         new Vector3(position.x , position.y , position.z + 10.0), new Vector3(0.0, -1.0, 0.0));
     setPerspectiveMatrix(projMatrix, PI / 2, factor, 1.0, 10000.0);
     var threedViewProjextionMatrix = projMatrix * viewMatrix;

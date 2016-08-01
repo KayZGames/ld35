@@ -144,19 +144,28 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
   Mapper<Position> pm;
   Mapper<Obstacle> om;
   Mapper<Color> cm;
+  TagManager tm;
+
+  Position playerPos;
 
   Float32List items;
   Uint16List indices;
   List<Attrib> attributes;
 
-  int valuesPerItem = 6;
+  int valuesPerItem = 7;
   int segmentsPerObstacle = segmentCount * 2;
 
   WebGlViewProjectionMatrixManager vpmm;
 
   ObstacleRenderingSystem(RenderingContext gl)
       : super(gl, Aspect.getAspectForAllOf([Obstacle, Position, Color])) {
-    attributes = [new Attrib('aPos', 3), new Attrib('aColor', 3)];
+    attributes = [new Attrib('aPos', 3), new Attrib('aColor', 4)];
+  }
+
+  @override
+  void begin() {
+    var playerEntity = tm.getEntity(playerTag);
+    playerPos = pm[playerEntity];
   }
 
   @override
@@ -247,6 +256,7 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
     items[loopOffset + 3] = c.r;
     items[loopOffset + 4] = c.g;
     items[loopOffset + 5] = c.b;
+    items[loopOffset + 6] = max(0.0, min(0.7, (p.xyz.z - playerPos.xyz.z + 100.0) / 100.0));
   }
 
   void createBorderVertex(int loopOffset, Position p, Color c, int segment) {
@@ -271,12 +281,13 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
         y = -1.0;
         break;
     }
-    items[loopOffset + 6] = p.xyz.x + x * playerRadius * 2;
-    items[loopOffset + 7] = p.xyz.y + y * playerRadius * 2;
-    items[loopOffset + 8] = p.xyz.z;
-    items[loopOffset + 9] = c.r;
-    items[loopOffset + 10] = c.g;
-    items[loopOffset + 11] = c.b;
+    items[loopOffset + 7] = p.xyz.x + x * playerRadius * 2;
+    items[loopOffset + 8] = p.xyz.y + y * playerRadius * 2;
+    items[loopOffset + 9] = p.xyz.z;
+    items[loopOffset + 10] = c.r;
+    items[loopOffset + 11] = c.g;
+    items[loopOffset + 12] = c.b;
+    items[loopOffset + 13] = max(0.0, min(0.9, (p.xyz.z - playerPos.xyz.z + 100.0) / 100.0));
   }
 
   @override
