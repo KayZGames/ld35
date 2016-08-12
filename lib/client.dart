@@ -14,6 +14,7 @@ part 'src/client/systems/rendering.dart';
 class Game extends GameBase {
   CanvasElement canvasHud;
   double _startSpeed = 0.0;
+  int gamepadIndex;
 
   Game() : super.noAssets('ld35', '#game', 800, 600, webgl: true) {
     Tween.combinedAttributesLimit = (segmentCount + 1) * 3;
@@ -49,7 +50,7 @@ class Game extends GameBase {
         new TunnelSegmentSpawner(),
         new ObstacleSpawner(),
         new TweeningSystem(),
-        new InputHandlingSystem(),
+        new InputHandlingSystem(() => gamepadIndex),
         new MovementSystem(),
         new PlayerAccelerationSystem(_startSpeed),
         new ShapeShiftingSystem(),

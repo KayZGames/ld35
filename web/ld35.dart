@@ -1,6 +1,7 @@
 import 'package:ld35/client.dart';
 
 Game game;
+var gamepadIndex;
 
 Future<Null> main() async {
   game = await new Game().start();
@@ -18,10 +19,25 @@ Future<Null> main() async {
       startGame();
     }
   });
+  window.on['gamepadconnected'].listen((GamepadEvent event) {
+    gamepadIndex = event.gamepad.index;
+  });
+  window.requestAnimationFrame(handleGamepads);
+}
+
+void handleGamepads(_) {
+  if (game.isStopped && gamepadIndex != null) {
+    var gamepad = window.navigator.getGamepads()[gamepadIndex];
+    if (gamepad.buttons[0].pressed || gamepad.buttons[9].pressed) {
+      startGame();
+    }
+  }
+  window.requestAnimationFrame(handleGamepads);
 }
 
 Future<Null> startGame() async {
   game = await new Game().start();
+  game.gamepadIndex = gamepadIndex;
   game.pause();
   game.startSpeed = double.parse(
       (querySelector('input[type=radio][name=speed]:checked')
