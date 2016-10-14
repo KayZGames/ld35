@@ -86,10 +86,9 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
     var indicesOffset = index * segmentsPerTunnelSegment * 3;
 
     for (var i = 0; i < segmentsPerTunnelSegment; i += 2) {
-      var angle = 2 * PI * i / segmentsPerTunnelSegment;
       var loopOffset = offset + i * 3;
-      items[loopOffset] = sin(angle) * ts.radius;
-      items[loopOffset + 1] = cos(angle) * ts.radius;
+      items[loopOffset] = ts.segments[i];
+      items[loopOffset + 1] = ts.segments[i + 1];
       items[loopOffset + 2] = p.xyz.z;
 
       items[loopOffset + 3] = items[loopOffset];

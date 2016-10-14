@@ -1,5 +1,6 @@
 library shared;
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:gamedev_helpers/gamedev_helpers_shared.dart';
 part 'package:ld35/src/shared/geometry_generator.dart';
 part 'src/shared/components.dart';

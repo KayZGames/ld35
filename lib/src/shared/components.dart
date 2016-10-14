@@ -16,8 +16,9 @@ class Size extends Component {
 }
 
 class TunnelSegment extends Component {
-  double radius, length;
-  TunnelSegment(this.radius, this.length);
+  double length;
+  Float32List segments;
+  TunnelSegment(this.length, this.segments);
 }
 
 class Obstacle extends Component {

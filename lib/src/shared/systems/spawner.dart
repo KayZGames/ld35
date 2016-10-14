@@ -5,6 +5,7 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
   Mapper<Position> pm;
   int lastSegment = 0;
   final double tunnelLength = 100.0;
+  int segmentsPerTunnelSegment = 64 * 2;
 
   @override
   void processSystem() {
@@ -13,10 +14,20 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
     while (p.xyz.z ~/ 100 > lastSegment - 100) {
       world.createAndAddEntity([
         new Position(0.0, 0.0, tunnelLength * lastSegment),
-        new TunnelSegment(200.0, tunnelLength)
+        new TunnelSegment(tunnelLength, createTunnelSegment(200.0))
       ]);
       lastSegment++;
     }
+  }
+
+  Float32List createTunnelSegment(double radius) {
+    var segment = new Float32List(segmentsPerTunnelSegment);
+    for (int i = 0; i < segmentsPerTunnelSegment; i += 2) {
+      var angle = 2 * PI * i / segmentsPerTunnelSegment;
+      segment[i] = sin(angle) * radius;
+      segment[i + 1] = cos(angle) * radius;
+    }
+    return segment;
   }
 }
 
