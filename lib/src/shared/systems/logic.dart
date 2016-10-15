@@ -81,7 +81,7 @@ class DespawningSystem extends EntitySystem {
     var playerPos = pm[player];
     entities.forEach((entity) {
       var p = pm[entity];
-      if (p.xyz.z + 500.0 < playerPos.xyz.z) {
+      if (p.xyz.z + 2500.0 < playerPos.xyz.z) {
         entity.deleteFromWorld();
       }
     });

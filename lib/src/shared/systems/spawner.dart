@@ -3,22 +3,23 @@ part of shared;
 class TunnelSegmentSpawner extends VoidEntitySystem {
   TagManager tm;
   Mapper<Position> pm;
-  int lastSegment = 0;
-  final double tunnelLength = 500.0;
+  double totalLength = 0.0;
   int segmentsPerTunnelSegment = 64 * 2;
   int lastSegmentType = 0;
+  double lastRotAngle = 0.0;
   final int segmentTypes = 3;
 
   @override
   void processSystem() {
     var player = tm.getEntity(playerTag);
     var p = pm[player];
-    while (p.xyz.z ~/ tunnelLength > lastSegment - tunnelLength) {
+    while (p.xyz.z > totalLength - 50000.0) {
+      var tunnelLength = 100.0 + random.nextDouble() * 1000.0;
       world.createAndAddEntity([
-        new Position(0.0, 0.0, tunnelLength * lastSegment),
-        new TunnelSegment(tunnelLength, createTunnelSegments(175.0 * 175.0 * PI ))
+        new Position(0.0, 0.0, totalLength),
+        new TunnelSegment(tunnelLength, createTunnelSegments(175.0 * 175.0 * PI))
       ]);
-      lastSegment++;
+      totalLength += tunnelLength;
     }
   }
 
@@ -31,7 +32,13 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
       GeometryGenerator.shapeRadiusCalculators[lastSegmentType](area),
       GeometryGenerator.shapeRadiusCalculators[nextSegmentType](area)
     ];
+    var nextRotAngle = 0.0;
+    if (totalLength > 25000.0) {
+      nextRotAngle = lastRotAngle -PI / 8 + PI * random.nextDouble() / 4;
+    }
+    var rotAngles = [lastRotAngle, nextRotAngle];
     lastSegmentType = nextSegmentType;
+    lastRotAngle = nextRotAngle;
     var segments = new Float32List(segmentsPerTunnelSegment * 2);
 
     for (int segment = 0; segment < segmentsPerTunnelSegment; segment += 1) {
@@ -79,8 +86,14 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
                   (j / (segmentsPerTunnelSegment ~/ 3)));
           break;
       }
-      segments[segment * 2] = x * radius[segment % 2];
-      segments[segment * 2 + 1] = y * radius[segment % 2];
+      var cs = cos(rotAngles[segment % 2]);
+      var sn = sin(rotAngles[segment % 2]);
+
+      var rotX = x * cs - y * sn;
+      var rotY = x * sn + y * cs;
+
+      segments[segment * 2] = rotX * radius[segment % 2];
+      segments[segment * 2 + 1] = rotY * radius[segment % 2];
     }
 
     return segments;
