@@ -7,7 +7,7 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
   final double tunnelLength = 500.0;
   int segmentsPerTunnelSegment = 64 * 2;
   int lastSegmentType = 0;
-  final int segmentTypes = 2;
+  final int segmentTypes = 3;
 
   @override
   void processSystem() {
@@ -16,27 +16,34 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
     while (p.xyz.z ~/ tunnelLength > lastSegment - tunnelLength) {
       world.createAndAddEntity([
         new Position(0.0, 0.0, tunnelLength * lastSegment),
-        new TunnelSegment(tunnelLength, createTunnelSegments(200.0))
+        new TunnelSegment(tunnelLength, createTunnelSegments(175.0 * 175.0 * PI ))
       ]);
       lastSegment++;
     }
   }
 
-  Float32List createTunnelSegments(double radius) {
-    var nextSegmentType = (random.nextDouble() < 0.8) ? lastSegmentType : (lastSegmentType +1) % segmentTypes;
+  Float32List createTunnelSegments(double area) {
+    var nextSegmentType = (random.nextDouble() < 0.8)
+        ? lastSegmentType
+        : random.nextInt(segmentTypes);
     var segmentType = [lastSegmentType, nextSegmentType];
+    var radius = [
+      GeometryGenerator.shapeRadiusCalculators[lastSegmentType](area),
+      GeometryGenerator.shapeRadiusCalculators[nextSegmentType](area)
+    ];
     lastSegmentType = nextSegmentType;
     var segments = new Float32List(segmentsPerTunnelSegment * 2);
 
     for (int segment = 0; segment < segmentsPerTunnelSegment; segment += 1) {
+      var x = 0.0, y = 0.0;
       switch (segmentType[segment % 2]) {
         case 0:
-          var angle = 2 * PI * segment / segmentsPerTunnelSegment;
-          segments[segment * 2] = cos(angle) * radius;
-          segments[segment * 2 + 1] = sin(angle) * radius;
+          var segmentMod = segment - segmentsPerTunnelSegment ~/ 8;
+          final angle = 2 * PI * segmentMod / segmentsPerTunnelSegment;
+          x = cos(angle);
+          y = sin(angle);
           break;
         case 1:
-          var x = 0.0, y = 0.0;
           var i = segment ~/ (segmentsPerTunnelSegment ~/ 4);
           var j = segment % (segmentsPerTunnelSegment ~/ 4);
           switch (i) {
@@ -57,9 +64,23 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
               y = -1.0;
               break;
           }
-          segments[segment * 2] = x * radius;
-          segments[segment * 2 + 1] = y * radius;
+          break;
+        case 2:
+          var segmentMod = segment + 15 * segmentsPerTunnelSegment ~/ 16;
+          var i = segmentMod ~/ (segmentsPerTunnelSegment ~/ 3);
+          var j = segmentMod % (segmentsPerTunnelSegment ~/ 3);
+          final angle = -PI / 6 + 2 * PI * i / 3;
+          final nextAngle = -PI / 6 + 2 * PI * (i + 1) / 3;
+          x = cos(angle) +
+              ((cos(nextAngle) - cos(angle)) *
+                  (j / (segmentsPerTunnelSegment ~/ 3)));
+          y = sin(angle) +
+              ((sin(nextAngle) - sin(angle)) *
+                  (j / (segmentsPerTunnelSegment ~/ 3)));
+          break;
       }
+      segments[segment * 2] = x * radius[segment % 2];
+      segments[segment * 2 + 1] = y * radius[segment % 2];
     }
 
     return segments;
@@ -82,8 +103,8 @@ class ObstacleSpawner extends VoidEntitySystem {
     var obstacleList =
         new List.generate(9, (index) => index < obstacles ? true : false);
     obstacleList.shuffle(random);
-    for (int i = -2; i < 3; i++) {
-      for (int j = -2; j < 3; j++) {
+    for (int i = -3; i < 4; i++) {
+      for (int j = -3; j < 4; j++) {
         var obstacleType = isBorder(i, j)
             ? -1
             : obstacleList.removeLast() ? random.nextInt(shapes) : -1;
@@ -99,7 +120,7 @@ class ObstacleSpawner extends VoidEntitySystem {
   }
 
   bool isBorder(int x, int y) {
-    return x.abs() == 2 || y.abs() == 2;
+    return x.abs() >= 2 || y.abs() >= 2;
   }
 
   @override
