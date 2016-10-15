@@ -71,6 +71,7 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
   int segmentsPerTunnelSegment = 64 * 2;
 
   WebGlViewProjectionMatrixManager vpmm;
+  MusicPlayerSystem mps;
 
   TunnelSegmentRenderingSystem(RenderingContext gl)
       : super(gl, Aspect.getAspectForAllOf([Position, TunnelSegment])) {
@@ -87,12 +88,12 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
 
     for (var i = 0; i < segmentsPerTunnelSegment; i += 2) {
       var loopOffset = offset + i * 3;
-      items[loopOffset] = ts.segments[i * 2];
-      items[loopOffset + 1] = ts.segments[i * 2 + 1];
+      items[loopOffset] = ts.segments[i * 2] * mps.beatFactor;
+      items[loopOffset + 1] = ts.segments[i * 2 + 1] * mps.beatFactor;
       items[loopOffset + 2] = p.xyz.z;
 
-      items[loopOffset + 3] = ts.segments[i * 2 + 2];
-      items[loopOffset + 4] = ts.segments[i * 2 + 3];
+      items[loopOffset + 3] = ts.segments[i * 2 + 2] * mps.beatFactor;
+      items[loopOffset + 4] = ts.segments[i * 2 + 3] * mps.beatFactor;
       items[loopOffset + 5] = items[loopOffset + 2] + ts.length;
     }
 
@@ -121,6 +122,7 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
     gl.uniformMatrix4fv(gl.getUniformLocation(program, 'uViewProjection'),
         false, vpmm.create3dViewProjectionMatrix().storage);
     gl.uniform1f(gl.getUniformLocation(program, 'uTime'), time);
+    gl.uniform1f(gl.getUniformLocation(program, 'uBeatMod'), (mps.beatFactor - 1.0) * 5.0 + 1.0);
 
     bufferElements(attributes, items, indices);
     gl.drawElements(TRIANGLES, indices.length, UNSIGNED_SHORT, 0);
@@ -155,6 +157,7 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
   int segmentsPerObstacle = segmentCount * 2;
 
   WebGlViewProjectionMatrixManager vpmm;
+  MusicPlayerSystem mps;
 
   ObstacleRenderingSystem(RenderingContext gl)
       : super(gl, Aspect.getAspectForAllOf([Obstacle, Position, Color])) {
@@ -255,7 +258,8 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
     items[loopOffset + 3] = c.r;
     items[loopOffset + 4] = c.g;
     items[loopOffset + 5] = c.b;
-    items[loopOffset + 6] = max(0.0, min(0.7, (p.xyz.z - playerPos.xyz.z + 100.0) / 100.0));
+    items[loopOffset + 6] =
+        max(0.0, min(0.7, (p.xyz.z - playerPos.xyz.z + 100.0) / 100.0));
   }
 
   void createBorderVertex(int loopOffset, Position p, Color c, int segment) {
@@ -286,7 +290,8 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
     items[loopOffset + 10] = c.r;
     items[loopOffset + 11] = c.g;
     items[loopOffset + 12] = c.b;
-    items[loopOffset + 13] = max(0.0, min(0.9, (p.xyz.z - playerPos.xyz.z + 100.0) / 100.0));
+    items[loopOffset + 13] =
+        max(0.0, min(0.9, (p.xyz.z - playerPos.xyz.z + 100.0) / 100.0));
   }
 
   @override

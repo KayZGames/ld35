@@ -1,6 +1,7 @@
 precision mediump float;
 
 uniform float uTime;
+uniform float uBeatMod;
 varying vec3 vPos;
 const float PI = 3.14159;
 
@@ -38,6 +39,8 @@ void addBlue(float toAdd) {
 void main() {
     float timeFactor = uTime - floor(vPos.z / 10000.0);
     float xy = abs(vPos.x) + abs(vPos.y);
+    xy = xy * uBeatMod;
+    timeFactor = timeFactor * uBeatMod;
 
     if (vPos.y > -55.0 && vPos.y < 55.0) {
         float blinkFreq = floor(vPos.z / 10000.0) * 2.0;

@@ -2,6 +2,7 @@ library client;
 
 import 'dart:html';
 export 'dart:html';
+import 'dart:web_audio';
 import 'package:ld35/shared.dart';
 import 'package:gamedev_helpers/gamedev_helpers.dart';
 import 'dart:web_gl';
@@ -10,13 +11,19 @@ export 'package:gamedev_helpers/gamedev_helpers.dart';
 //part 'src/client/systems/name.dart';
 part 'src/client/systems/events.dart';
 part 'src/client/systems/rendering.dart';
+part 'src/client/systems/audio.dart';
 
 class Game extends GameBase {
   CanvasElement canvasHud;
   double _startSpeed = 0.0;
   int gamepadIndex;
 
-  Game() : super.noAssets('ld35', '#game', 800, 600, webgl: true) {
+  Game()
+      : super('ld35', '#game', 800, 600,
+            webgl: true,
+            musicName: '8-Bit-Mayhem',
+            bodyDefsName: null,
+            spriteSheetName: null) {
     Tween.combinedAttributesLimit = (segmentCount + 1) * 3;
 
     world.addManager(new GameStateManager());
@@ -47,6 +54,7 @@ class Game extends GameBase {
   Map<int, List<EntitySystem>> getSystems() {
     return {
       GameBase.rendering: [
+        new MusicPlayerSystem(music),
         new TunnelSegmentSpawner(),
         new ObstacleSpawner(),
         new TweeningSystem(),
@@ -63,7 +71,7 @@ class Game extends GameBase {
         new DistanceTraveledRenderingSystem(canvasHud)
       ],
       GameBase.physics: [
-        new ObstacleCollisionDetectionSystem()
+        new ObstacleCollisionDetectionSystem(),
       ]
     };
   }
@@ -94,6 +102,7 @@ class Game extends GameBase {
 
   set startSpeed(double value) {
     _startSpeed = value;
-    (world.getSystem(PlayerAccelerationSystem) as PlayerAccelerationSystem).startSpeed = value;
+    (world.getSystem(PlayerAccelerationSystem) as PlayerAccelerationSystem)
+        .startSpeed = value;
   }
 }
