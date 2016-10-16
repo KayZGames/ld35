@@ -172,7 +172,7 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
   Uint16List indices;
   List<Attrib> attributes;
 
-  int valuesPerItem = 7;
+  int valuesPerItem = 10;
   int segmentsPerObstacle = segmentCount * 2;
 
   WebGlViewProjectionMatrixManager vpmm;
@@ -180,7 +180,7 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
 
   ObstacleRenderingSystem(RenderingContext gl)
       : super(gl, Aspect.getAspectForAllOf([Obstacle, Position, Color])) {
-    attributes = [new Attrib('aPos', 3), new Attrib('aColor', 4)];
+    attributes = [new Attrib('aPos', 3), new Attrib('aColor', 4), new Attrib('aLightDirection', 3)];
   }
 
   @override
@@ -279,6 +279,9 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
     items[loopOffset + 5] = c.b;
     items[loopOffset + 6] =
         max(0.0, min(0.7, (p.xyz.z - playerPos.xyz.z + 100.0) / 100.0));
+    items[loopOffset + 7] = items[loopOffset] - playerPos.xyz.x;
+    items[loopOffset + 8] = items[loopOffset + 1] - playerPos.xyz.y;
+    items[loopOffset + 9] = items[loopOffset + 2] - playerPos.xyz.z;
   }
 
   void createBorderVertex(int loopOffset, Position p, Color c, int segment) {
@@ -303,14 +306,17 @@ class ObstacleRenderingSystem extends WebGlRenderingSystem {
         y = -1.0;
         break;
     }
-    items[loopOffset + 7] = p.xyz.x + x * playerRadius * 2;
-    items[loopOffset + 8] = p.xyz.y + y * playerRadius * 2;
-    items[loopOffset + 9] = p.xyz.z;
-    items[loopOffset + 10] = c.r;
-    items[loopOffset + 11] = c.g;
-    items[loopOffset + 12] = c.b;
-    items[loopOffset + 13] =
+    items[loopOffset + 10] = p.xyz.x + x * playerRadius * 2;
+    items[loopOffset + 11] = p.xyz.y + y * playerRadius * 2;
+    items[loopOffset + 12] = p.xyz.z;
+    items[loopOffset + 13] = c.r;
+    items[loopOffset + 14] = c.g;
+    items[loopOffset + 15] = c.b;
+    items[loopOffset + 16] =
         max(0.0, min(0.9, (p.xyz.z - playerPos.xyz.z + 100.0) / 100.0));
+    items[loopOffset + 17] = items[loopOffset + 10] - playerPos.xyz.x;
+    items[loopOffset + 18] = items[loopOffset + 11] - playerPos.xyz.y;
+    items[loopOffset + 19] = items[loopOffset + 12] - playerPos.xyz.z;
   }
 
   @override
