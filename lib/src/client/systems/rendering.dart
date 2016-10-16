@@ -62,12 +62,13 @@ class PlayerRenderingSystem extends WebGlRenderingSystem {
 class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
   Mapper<Position> pm;
   Mapper<TunnelSegment> tsm;
+  TagManager tm;
 
   Float32List items;
   Uint16List indices;
   List<Attrib> attributes;
 
-  int valuesPerItem = 3;
+  int valuesPerItem = 9;
   int segmentsPerTunnelSegment = 64 * 2;
 
   WebGlViewProjectionMatrixManager vpmm;
@@ -75,26 +76,44 @@ class TunnelSegmentRenderingSystem extends WebGlRenderingSystem {
 
   TunnelSegmentRenderingSystem(RenderingContext gl)
       : super(gl, Aspect.getAspectForAllOf([Position, TunnelSegment])) {
-    attributes = [new Attrib('aPos', valuesPerItem)];
+    attributes = [new Attrib('aPos', 3), new Attrib('aLightDirection', 3), new Attrib('aNormal', 3)];
   }
 
   @override
   void processEntity(int index, Entity entity) {
     var p = pm[entity];
     var ts = tsm[entity];
+    var player = tm.getEntity(playerTag);
+    var playerPos = pm[player];
 
     var offset = index * segmentsPerTunnelSegment * valuesPerItem;
     var indicesOffset = index * segmentsPerTunnelSegment * 3;
 
     for (var i = 0; i < segmentsPerTunnelSegment; i += 2) {
-      var loopOffset = offset + i * 3;
+      var loopOffset = offset + i * valuesPerItem;
       items[loopOffset] = ts.segments[i * 2] * mps.beatFactor;
       items[loopOffset + 1] = ts.segments[i * 2 + 1] * mps.beatFactor;
       items[loopOffset + 2] = p.xyz.z;
 
-      items[loopOffset + 3] = ts.segments[i * 2 + 2] * mps.beatFactor;
-      items[loopOffset + 4] = ts.segments[i * 2 + 3] * mps.beatFactor;
-      items[loopOffset + 5] = items[loopOffset + 2] + ts.length;
+      items[loopOffset + 3] = items[loopOffset] - playerPos.xyz.x;
+      items[loopOffset + 4] = items[loopOffset + 1] - playerPos.xyz.y;
+      items[loopOffset + 5] = items[loopOffset + 2] - playerPos.xyz.z;
+
+      items[loopOffset + 6] = items[loopOffset];
+      items[loopOffset + 7] = items[loopOffset + 1];
+      items[loopOffset + 8] = 0.0;
+
+      items[loopOffset + 9] = ts.segments[i * 2 + 2] * mps.beatFactor;
+      items[loopOffset + 10] = ts.segments[i * 2 + 3] * mps.beatFactor;
+      items[loopOffset + 11] = items[loopOffset + 2] + ts.length;
+
+      items[loopOffset + 12] = items[loopOffset + 9] - playerPos.xyz.x;
+      items[loopOffset + 13] = items[loopOffset + 10] - playerPos.xyz.y;
+      items[loopOffset + 14] = items[loopOffset + 11] - playerPos.xyz.z;
+
+      items[loopOffset + 15] = items[loopOffset + 9];
+      items[loopOffset + 16] = items[loopOffset + 10];
+      items[loopOffset + 17] = 0.0;
     }
 
     for (var i = 0; i < segmentsPerTunnelSegment; i += 2) {

@@ -34,6 +34,5 @@ class MusicPlayerSystem extends VoidEntitySystem {
         beatByteFrequencyData.reduce((value, element) => value + element) /
             beatByteFrequencyData.length /
             1000.0;
-    print(beatFactor);
   }
 }

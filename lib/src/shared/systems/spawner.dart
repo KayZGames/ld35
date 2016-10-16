@@ -3,7 +3,7 @@ part of shared;
 class TunnelSegmentSpawner extends VoidEntitySystem {
   TagManager tm;
   Mapper<Position> pm;
-  double totalLength = 0.0;
+  double totalLength = -3000.0;
   int segmentsPerTunnelSegment = 64 * 2;
   int lastSegmentType = 0;
   double lastRotAngle = 0.0;
@@ -14,7 +14,7 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
     var player = tm.getEntity(playerTag);
     var p = pm[player];
     while (p.xyz.z > totalLength - 50000.0) {
-      var tunnelLength = 100.0 + random.nextDouble() * 1000.0;
+      var tunnelLength = 250.0 + random.nextDouble() * 1250.0;
       world.createAndAddEntity([
         new Position(0.0, 0.0, totalLength),
         new TunnelSegment(tunnelLength, createTunnelSegments(175.0 * 175.0 * PI))
@@ -45,7 +45,7 @@ class TunnelSegmentSpawner extends VoidEntitySystem {
       var x = 0.0, y = 0.0;
       switch (segmentType[segment % 2]) {
         case 0:
-          var segmentMod = segment - segmentsPerTunnelSegment ~/ 8;
+          var segmentMod = (segment - segment % 2) - segmentsPerTunnelSegment ~/ 8;
           final angle = 2 * PI * segmentMod / segmentsPerTunnelSegment;
           x = cos(angle);
           y = sin(angle);

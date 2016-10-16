@@ -3,6 +3,8 @@ precision mediump float;
 uniform float uTime;
 uniform float uBeatMod;
 varying vec3 vPos;
+varying vec3 vNormal;
+varying vec3 vLightDirection;
 const float PI = 3.14159;
 
 float r = 0.0;
@@ -84,5 +86,10 @@ void main() {
         addRed(sin(vPos.z / 99.0 + xy / 99.0 * vPos.z / 100000.0));
     }
 
-	gl_FragColor = vec4(r * 0.7, g * 0.7, b * 0.7, 1.0);
+	vec3 normal = normalize(vNormal);
+	vec3 lightDirection = normalize(vLightDirection);
+	float vNormalDotLight = max(dot(lightDirection, normal), 0.0);
+    vec3 diffuse = vec3(1.0, 1.0, 1.0) * vec3(r, g, b) * vNormalDotLight;
+
+	gl_FragColor = vec4(diffuse, 1.0);
 }
