@@ -9,6 +9,6 @@ varying vec3 vLightDirection;
 void main() {
 	gl_Position = uViewProjection * vec4(aPos, 1.0);
 	vNormal = aNormal;
-	vLightDirection = aLightDirection;
+	vLightDirection = aLightDirection * 5.0;
 	vPos = aPos;
 }
